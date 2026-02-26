@@ -1,0 +1,8 @@
+## Interface: 11200
+## Title: Totemic
+## Notes: shaman totem addon for TurtleWoW - timers, cooldowns, and learned totem detection
+## Version: 1.0.0
+## Author: YourName
+## SavedVariablesPerCharacter: Totemic_Options
+
+Totemic.xml
