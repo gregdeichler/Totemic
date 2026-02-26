@@ -120,16 +120,16 @@ function Totemic_UpdateTimers()
 end
 
 function Totemic_OnLoad()
-	this:RegisterEvent("VARIABLES_LOADED")
 	this:RegisterEvent("PLAYER_TOTEM_UPDATE")
+	this:RegisterEvent("SPELLBOOK_CHANGED")
+	
+	Totemic_ScanLearnedTotems()
+	TotemicFrame:Show()
+	DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Totemic|r v" .. TOTEMIC_VERSION .. " loaded.")
 end
 
 function Totemic_OnEvent(event, arg1)
-	if event == "VARIABLES_LOADED" then
-		Totemic_ScanLearnedTotems()
-		TotemicFrame:Show()
-		DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Totemic|r v" .. TOTEMIC_VERSION .. " loaded.")
-	elseif event == "PLAYER_TOTEM_UPDATE" then
+	if event == "PLAYER_TOTEM_UPDATE" then
 		Totemic_ScanLearnedTotems()
 	elseif event == "SPELLBOOK_CHANGED" then
 		Totemic_ScanLearnedTotems()

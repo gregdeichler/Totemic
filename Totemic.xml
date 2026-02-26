@@ -45,7 +45,7 @@ C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button name="TotemicEarth" inherits="SecureActionButtonTemplate">
+			<Button name="TotemicEarth" inherits="SecureActionButtonTemplate" hidden="false">
 				<Size>
 					<AbsDimension x="36" y="36"/>
 				</Size>
