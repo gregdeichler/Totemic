@@ -1,154 +1,102 @@
 local _, class = UnitClass("player")
-
 if class ~= "SHAMAN" then
 	return
 end
 
 local TOTEMIC_VERSION = "1.0.0"
 
-local totemData = {
-	Earth = {
-		{ name = "Earthbind Totem", icon = "Interface\\Icons\\Spell_Nature_StrengthOfEarthTotem02", cooldown = 15 },
-		{ name = "Tremor Totem", icon = "Interface\\Icons\\Spell_Nature_TremorTotem", cooldown = 0 },
-		{ name = "Strength of Earth Totem", icon = "Interface\\Icons\\Spell_Nature_EarthBindTotem", cooldown = 0 },
-		{ name = "Stoneskin Totem", icon = "Interface\\Icons\\Spell_Nature_StoneSkinTotem", cooldown = 0 },
-		{ name = "Stoneclaw Totem", icon = "Interface\\Icons\\Spell_Nature_StoneClawTotem", cooldown = 30 }
-	},
-	Fire = {
-		{ name = "Searing Totem", icon = "Interface\\Icons\\Spell_Fire_SearingTotem", cooldown = 0 },
-		{ name = "Fire Nova Totem", icon = "Interface\\Icons\\Spell_Fire_SealOfFire", cooldown = 15 },
-		{ name = "Magma Totem", icon = "Interface\\Icons\\Spell_Fire_SelfDestruct", cooldown = 0 },
-		{ name = "Frost Resistance Totem", icon = "Interface\\Icons\\Spell_FrostResistanceTotem_01", cooldown = 0 },
-		{ name = "Flametongue Totem", icon = "Interface\\Icons\\Spell_Nature_GuardianWard", cooldown = 0 }
-	},
-	Water = {
-		{ name = "Mana Spring Totem", icon = "Interface\\Icons\\Spell_Nature_ManaRegenTotem", cooldown = 0 },
-		{ name = "Fire Resistance Totem", icon = "Interface\\Icons\\Spell_FireResistanceTotem_01", cooldown = 0 },
-		{ name = "Poison Cleansing Totem", icon = "Interface\\Icons\\Spell_Nature_PoisonCleansingTotem", cooldown = 0 },
-		{ name = "Disease Cleansing Totem", icon = "Interface\\Icons\\Spell_Nature_DiseaseCleansingTotem", cooldown = 0 },
-		{ name = "Healing Stream Totem", icon = "Interface\\Icons\\INV_Spear_04", cooldown = 0 }
-	},
-	Air = {
-		{ name = "Tranquil Air Totem", icon = "Interface\\Icons\\Spell_Nature_Brilliance", cooldown = 0 },
-		{ name = "Grounding Totem", icon = "Interface\\Icons\\Spell_Nature_GroundingTotem", cooldown = 15 },
-		{ name = "Windfury Totem", icon = "Interface\\Icons\\Spell_Nature_Windfury", cooldown = 0 },
-		{ name = "Grace of Air Totem", icon = "Interface\\Icons\\Spell_Nature_InvisibilityTotem", cooldown = 0 },
-		{ name = "Nature Resistance Totem", icon = "Interface\\Icons\\Spell_Nature_NatureResistanceTotem", cooldown = 0 },
-		{ name = "Windwall Totem", icon = "Interface\\Icons\\Spell_Nature_EarthBind", cooldown = 0 },
-		{ name = "Sentry Totem", icon = "Interface\\Icons\\Spell_Nature_RemoveCurse", cooldown = 0 }
-	}
+local totemSpells = {
+	{ element = "Earth", name = "Earthbind Totem" },
+	{ element = "Earth", name = "Tremor Totem" },
+	{ element = "Earth", name = "Strength of Earth Totem" },
+	{ element = "Earth", name = "Stoneskin Totem" },
+	{ element = "Earth", name = "Stoneclaw Totem" },
+	{ element = "Fire", name = "Searing Totem" },
+	{ element = "Fire", name = "Fire Nova Totem" },
+	{ element = "Fire", name = "Magma Totem" },
+	{ element = "Fire", name = "Frost Resistance Totem" },
+	{ element = "Fire", name = "Flametongue Totem" },
+	{ element = "Water", name = "Mana Spring Totem" },
+	{ element = "Water", name = "Fire Resistance Totem" },
+	{ element = "Water", name = "Poison Cleansing Totem" },
+	{ element = "Water", name = "Disease Cleansing Totem" },
+	{ element = "Water", name = "Healing Stream Totem" },
+	{ element = "Air", name = "Tranquil Air Totem" },
+	{ element = "Air", name = "Grounding Totem" },
+	{ element = "Air", name = "Windfury Totem" },
+	{ element = "Air", name = "Grace of Air Totem" },
+	{ element = "Air", name = "Nature Resistance Totem" },
+	{ element = "Air", name = "Windwall Totem" },
+	{ element = "Air", name = "Sentry Totem" }
 }
 
-local activeTotems = {}
-local learnedTotems = {}
+local elementButtons = {
+	[1] = "TotemicEarth",
+	[2] = "TotemicFire", 
+	[3] = "TotemicWater",
+	[4] = "TotemicAir"
+}
 
-local elements = {"Earth", "Fire", "Water", "Air"}
+local elementNames = {
+	[1] = "Earth",
+	[2] = "Fire",
+	[3] = "Water",
+	[4] = "Air"
+}
 
-function Totemic_ScanLearnedTotems()
-	for _, element in ipairs(elements) do
-		local count = 0
-		for i, totem in ipairs(totemData[element]) do
-			if Totemic_IsSpellLearned(totem.name) then
-				count = count + 1
-			end
-		end
-		count = max(count, 1)
-		for i = 1, count do
-			local button = _G["Totemic" .. element]
-			if button then
-				button:Show()
-			end
-		end
-		for i = count + 1, 5 do
-			local button = _G["Totemic" .. element]
-			if button then
-				button:Hide()
-			end
-		end
-	end
-end
+local elementIndex = {
+	Earth = 1,
+	Fire = 2,
+	Water = 3,
+	Air = 4
+}
 
-function Totemic_IsSpellLearned(spellName)
+function Totemic_FindSpell(name)
 	for i = 1, 400 do
-		local name = GetSpellName(i, BOOKTYPE_SPELL)
-		if name and name == spellName then
-			return true
+		local spellName = GetSpellName(i, BOOKTYPE_SPELL)
+		if spellName and spellName == name then
+			return i
 		end
 	end
-	return false
+	return nil
 end
 
-function Totemic_CastTotem(element)
-	local count = 0
-	for i, totem in ipairs(totemData[element]) do
-		if Totemic_IsSpellLearned(totem.name) then
-			count = count + 1
+function Totemic_ScanSpells()
+	for id, data in ipairs(totemSpells) do
+		local spellId = Totemic_FindSpell(data.name)
+		if spellId then
+			local btn = elementButtons[elementIndex[data.element]]
+			_G[btn]:Show()
+			DEFAULT_CHAT_FRAME:AddMessage("Found: " .. data.name)
+			break
 		end
 	end
+end
+
+function Totemic_CastTotem(id)
+	local element = elementNames[id]
+	if not element then return end
 	
-	for i = 1, count do
-		local totem = totemData[element][i]
-		CastSpellByName(totem.name)
-		activeTotems[element] = {
-			name = totem.name,
-			castTime = GetTime(),
-			cooldown = totem.cooldown
-		}
-		break
-	end
-end
-
-function Totemic_UpdateTimers()
-	for _, element in ipairs(elements) do
-		local totem = activeTotems[element]
-		local button = _G["Totemic" .. element]
-		local timer = _G["Totemic" .. element .. "Timer"]
-		
-		if totem and button and timer then
-			local elapsed = GetTime() - totem.castTime
-			local remaining = totem.cooldown - elapsed
-			
-			if remaining > 0 then
-				timer:SetText(format("%.0f", remaining))
-				timer:Show()
-			else
-				timer:Hide()
-				activeTotems[element] = nil
+	for _, data in ipairs(totemSpells) do
+		if data.element == element then
+			local spellId = Totemic_FindSpell(data.name)
+			if spellId then
+				CastSpellByName(data.name)
+				return
 			end
 		end
-	end
-end
-
-function Totemic_OnLoad()
-	this:RegisterEvent("PLAYER_TOTEM_UPDATE")
-	this:RegisterEvent("SPELLBOOK_CHANGED")
-	
-	Totemic_ScanLearnedTotems()
-	TotemicFrame:Show()
-	DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Totemic|r v" .. TOTEMIC_VERSION .. " loaded.")
-end
-
-function Totemic_OnEvent(event, arg1)
-	if event == "PLAYER_TOTEM_UPDATE" then
-		Totemic_ScanLearnedTotems()
-	elseif event == "SPELLBOOK_CHANGED" then
-		Totemic_ScanLearnedTotems()
-	end
-end
-
-function Totemic_OnUpdate(arg1)
-	this.timer = (this.timer or 0) + arg1
-	if this.timer > 0.1 then
-		Totemic_UpdateTimers()
-		this.timer = 0
 	end
 end
 
 SLASH_TOTEMIC1 = "/totemic"
-SlashCmdList["TOTEMIC"] = function()
-	if TotemicFrame:IsVisible() then
-		TotemicFrame:Hide()
-	else
+SlashCmdList["TOTEMIC"] = function(msg)
+	if msg == "show" or msg == "" then
 		TotemicFrame:Show()
+	elseif msg == "hide" then
+		TotemicFrame:Hide()
 	end
 end
+
+DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Totemic|r v" .. TOTEMIC_VERSION .. " loaded.")
+
+Totemic_ScanSpells()

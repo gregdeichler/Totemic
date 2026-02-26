@@ -2,211 +2,78 @@
 C:\Projects\WoW\Bin\Interface\FrameXML\UI.xsd">
 	<Script file="Totemic.lua"/>
 	
-	<Frame name="TotemicFrame" toplevel="true" frameStrata="MEDIUM" enableMouse="true" movable="true" parent="UIParent" hidden="true">
+	<Frame name="TotemicFrame" toplevel="true" frameStrata="MEDIUM" enableMouse="true" movable="true" parent="UIParent">
 		<Size>
-			<AbsDimension x="200" y="180"/>
+			<AbsDimension x="180" y="60"/>
 		</Size>
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
 		<Scripts>
 			<OnLoad>
-				Totemic_OnLoad()
+				TotemicFrame:Show()
 			</OnLoad>
-			<OnEvent>
-				Totemic_OnEvent(event, arg1)
-			</OnEvent>
-			<OnUpdate>
-				Totemic_OnUpdate(arg1)
-			</OnUpdate>
+			<OnDragStart>
+				this:StartMoving()
+			</OnDragStart>
+			<OnDragStop>
+				this:StopMovingOrSizing()
+			</OnDragStop>
 		</Scripts>
 		<Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
-			<EdgeSize>
-				<AbsValue val="16"/>
-			</EdgeSize>
-			<TileSize>
-				<AbsValue val="16"/>
-			</TileSize>
+			<EdgeSize><AbsValue val="16"/></EdgeSize>
+			<TileSize><AbsValue val="16"/></TileSize>
 			<BackgroundInsets>
 				<AbsInset left="4" right="4" top="4" bottom="4"/>
 			</BackgroundInsets>
 		</Backdrop>
-		<Layers>
-			<Layer level="OVERLAY">
-				<FontString name="TotemicTitle" inherits="GameFontNormal" text="Totemic">
-					<Anchors>
-						<Anchor point="TOP">
-							<Offset>
-								<AbsDimension x="0" y="-10"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
 		<Frames>
-			<Button name="TotemicEarth" inherits="SecureActionButtonTemplate" hidden="false">
-				<Size>
-					<AbsDimension x="36" y="36"/>
-				</Size>
+			<Button name="TotemicEarth" id="1">
+				<Size><AbsDimension x="36" y="36"/></Size>
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="10" y="-30"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT"><Offset x="10" y="-10"/></Offset>
 				</Anchors>
-				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture name="$parentIcon" file="Interface\Icons\Spell_Nature_StrengthOfEarthTotem02"/>
-					</Layer>
-					<Layer level="OVERLAY">
-						<FontString name="$parentTimer" inherits="GameFontNormal" fontSize="10">
-							<Anchors>
-								<Anchor point="CENTER"/>
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
+				<NormalTexture file="Interface\Icons\Spell_Nature_StrengthOfEarthTotem02"/>
 				<Scripts>
-					<OnClick>
-						Totemic_CastTotem("Earth")
-					</OnClick>
-					<OnEnter>
-						GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-						GameTooltip:SetText("Earth Totem")
-						GameTooltip:Show()
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide()
-					</OnLeave>
+					<OnClick>Totemic_CastTotem(1)</OnClick>
+					<OnEnter>GameTooltip:SetOwner(this,"ANCHOR_RIGHT");GameTooltip:SetText("Earth Totem");GameTooltip:Show()</OnEnter>
+					<OnLeave>GameTooltip:Hide()</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="TotemicFire" inherits="SecureActionButtonTemplate">
-				<Size>
-					<AbsDimension x="36" y="36"/>
-				</Size>
+			<Button name="TotemicFire" id="2">
+				<Size><AbsDimension x="36" y="36"/></Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="TotemicEarth" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="8" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="TotemicEarth" relativePoint="RIGHT"><Offset x="5" y="0"/></Offset>
 				</Anchors>
-				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture name="$parentIcon" file="Interface\Icons\Spell_Fire_SearingTotem"/>
-					</Layer>
-					<Layer level="OVERLAY">
-						<FontString name="$parentTimer" inherits="GameFontNormal" fontSize="10">
-							<Anchors>
-								<Anchor point="CENTER"/>
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
+				<NormalTexture file="Interface\Icons\Spell_Fire_SearingTotem"/>
 				<Scripts>
-					<OnClick>
-						Totemic_CastTotem("Fire")
-					</OnClick>
-					<OnEnter>
-						GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-						GameTooltip:SetText("Fire Totem")
-						GameTooltip:Show()
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide()
-					</OnLeave>
+					<OnClick>Totemic_CastTotem(2)</OnClick>
+					<OnEnter>GameTooltip:SetOwner(this,"ANCHOR_RIGHT");GameTooltip:SetText("Fire Totem");GameTooltip:Show()</OnEnter>
+					<OnLeave>GameTooltip:Hide()</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="TotemicWater" inherits="SecureActionButtonTemplate">
-				<Size>
-					<AbsDimension x="36" y="36"/>
-				</Size>
+			<Button name="TotemicWater" id="3">
+				<Size><AbsDimension x="36" y="36"/></Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="TotemicFire" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="8" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="TotemicFire" relativePoint="RIGHT"><Offset x="5" y="0"/></Offset>
 				</Anchors>
-				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture name="$parentIcon" file="Interface\Icons\Spell_Nature_ManaRegenTotem"/>
-					</Layer>
-					<Layer level="OVERLAY">
-						<FontString name="$parentTimer" inherits="GameFontNormal" fontSize="10">
-							<Anchors>
-								<Anchor point="CENTER"/>
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
+				<NormalTexture file="Interface\Icons\Spell_Nature_ManaRegenTotem"/>
 				<Scripts>
-					<OnClick>
-						Totemic_CastTotem("Water")
-					</OnClick>
-					<OnEnter>
-						GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-						GameTooltip:SetText("Water Totem")
-						GameTooltip:Show()
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide()
-					</OnLeave>
+					<OnClick>Totemic_CastTotem(3)</OnClick>
+					<OnEnter>GameTooltip:SetOwner(this,"ANCHOR_RIGHT");GameTooltip:SetText("Water Totem");GameTooltip:Show()</OnEnter>
+					<OnLeave>GameTooltip:Hide()</OnLeave>
 				</Scripts>
 			</Button>
-			<Button name="TotemicAir" inherits="SecureActionButtonTemplate">
-				<Size>
-					<AbsDimension x="36" y="36"/>
-				</Size>
+			<Button name="TotemicAir" id="4">
+				<Size><AbsDimension x="36" y="36"/></Size>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="TotemicWater" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="8" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="TotemicWater" relativePoint="RIGHT"><Offset x="5" y="0"/></Offset>
 				</Anchors>
-				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture name="$parentIcon" file="Interface\Icons\Spell_Nature_Windfury"/>
-					</Layer>
-					<Layer level="OVERLAY">
-						<FontString name="$parentTimer" inherits="GameFontNormal" fontSize="10">
-							<Anchors>
-								<Anchor point="CENTER"/>
-							</Anchors>
-						</FontString>
-					</Layer>
-				</Layers>
+				<NormalTexture file="Interface\Icons\Spell_Nature_Windfury"/>
 				<Scripts>
-					<OnClick>
-						Totemic_CastTotem("Air")
-					</OnClick>
-					<OnEnter>
-						GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-						GameTooltip:SetText("Air Totem")
-						GameTooltip:Show()
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide()
-					</OnLeave>
-				</Scripts>
-			</Button>
-			<Button name="TotemicDragHandle" movable="true">
-				<Size>
-					<AbsDimension x="180" y="16"/>
-				</Size>
-				<Anchors>
-					<Anchor point="TOP"/>
-				</Anchors>
-				<Scripts>
-					<OnDragStart>
-						TotemicFrame:StartMoving()
-					</OnDragStart>
-					<OnDragStop>
-						TotemicFrame:StopMovingOrSizing()
-					</OnDragStop>
+					<OnClick>Totemic_CastTotem(4)</OnClick>
+					<OnEnter>GameTooltip:SetOwner(this,"ANCHOR_RIGHT");GameTooltip:SetText("Air Totem");GameTooltip:Show()</OnEnter>
+					<OnLeave>GameTooltip:Hide()</OnLeave>
 				</Scripts>
 			</Button>
 		</Frames>
