@@ -5,6 +5,8 @@ end
 
 local TOTEMIC_VERSION = "1.0.0"
 
+DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Totemic|r: Starting...")
+
 local totemSpells = {
 	{ element = "Earth", name = "Earthbind Totem" },
 	{ element = "Earth", name = "Tremor Totem" },
@@ -62,14 +64,28 @@ function Totemic_FindSpell(name)
 end
 
 function Totemic_ScanSpells()
+	local found = { Earth = false, Fire = false, Water = false, Air = false }
+	
 	for id, data in ipairs(totemSpells) do
 		local spellId = Totemic_FindSpell(data.name)
 		if spellId then
-			local btn = elementButtons[elementIndex[data.element]]
-			_G[btn]:Show()
-			DEFAULT_CHAT_FRAME:AddMessage("Found: " .. data.name)
-			break
+			found[data.element] = true
 		end
+	end
+	
+	for element, hasLearned in pairs(found) do
+		local btn = elementButtons[elementIndex[element]]
+		if btn and _G[btn] then
+			if hasLearned then
+				_G[btn]:Show()
+			else
+				_G[btn]:Hide()
+			end
+		end
+	end
+	
+	if not (found.Earth or found.Fire or found.Water or found.Air) then
+		DEFAULT_CHAT_FRAME:AddMessage("No totems found!")
 	end
 end
 
@@ -86,6 +102,7 @@ function Totemic_CastTotem(id)
 			end
 		end
 	end
+	DEFAULT_CHAT_FRAME:AddMessage("No " .. element .. " totem learned!")
 end
 
 SLASH_TOTEMIC1 = "/totemic"
@@ -98,5 +115,7 @@ SlashCmdList["TOTEMIC"] = function(msg)
 end
 
 DEFAULT_CHAT_FRAME:AddMessage("|cFF00FF00Totemic|r v" .. TOTEMIC_VERSION .. " loaded.")
+
+TotemicFrame:Show()
 
 Totemic_ScanSpells()
